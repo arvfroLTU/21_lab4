@@ -4,6 +4,7 @@ package Sim;
 // and it count messages send and received.
 
 public class Node extends SimEnt {
+	private Router currentRouter;
 	private NetworkAddr _id;
 	private SimEnt _peer;
 	private int _sentmsg=0;
@@ -14,14 +15,19 @@ public class Node extends SimEnt {
 	private int _toNetwork = 0;
 	private int _toHost = 0;
 	public int flag = 0;
+	int moveCondition;
+	Router moveHere;
+	int counter= 0;
 	public int _homeAgentId;
 	private int _currentAgentId;
 
 	
-	public Node (int network, int node)
+	public Node (int network, int node, int moveAfter, Router MoveTo)
 	{
 		super();
 		_id = new NetworkAddr(network, node);
+		this.moveCondition = moveAfter;
+		this.moveHere = MoveTo;
 	}	
 	
 	
@@ -51,6 +57,10 @@ public class Node extends SimEnt {
 	{
 		return _id;
 	}
+	
+	public void moveRouter(Router target) {
+		send(currentRouter, new moveRouter(this, target), 0 );
+	}
 
 	
 	
@@ -77,12 +87,6 @@ public class Node extends SimEnt {
 	
 	public void recv(SimEnt src, Event ev)
 	{
-		/**
-		if (SimEngine.getTime()> switchingTime && flag == 0) {
-			flag++;
-			moveMe(3);
-		}
-		*/
 		
 		if (ev instanceof TimerEvent)
 		{			
@@ -93,19 +97,34 @@ public class Node extends SimEnt {
 				send(this, new TimerEvent(),_timeBetweenSending);
 				System.out.println("Node "+_id.networkId()+ "." + _id.nodeId() +" sent message with seq: "+_seq + " at time "+SimEngine.getTime());
 				_seq++;
-				
+		
+				}
 			}
-		}
 		if (ev instanceof Message)
 		{
+			counter++;
 			System.out.println("Node "+_id.networkId()+ "." + _id.nodeId() +" receives message with seq: "+((Message) ev).seq() + " at time "+SimEngine.getTime());
-			
+			if (counter > moveCondition && flag < 1 && moveHere != null) {
+				this.moveRouter(moveHere);
+				flag++;
+
+			}
 		}
 		
 		if (ev instanceof routerAdvertisement) {
 			System.out.println("Router Advertisement recieved");
 			_currentAgentId= ((routerAdvertisement) ev).get_Router();
 		}
+	}
+
+
+	public Router getCurrentRouter() {
+		return currentRouter;
+	}
+
+
+	public void setCurrentRouter(Router currentRouter) {
+		this.currentRouter = currentRouter;
 	}
 
 }

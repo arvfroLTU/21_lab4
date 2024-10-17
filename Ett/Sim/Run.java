@@ -16,12 +16,8 @@ public class Run {
 		
 		// Create two end hosts that will be
 		// communicating via the router
-		Node  trafficGen = new Node(1,1);
-		Node  trafficSink = new Node(1,2);
 
 		//Connect links to hosts
-		trafficGen.setPeer(link1);
-		trafficSink.setPeer(link2);
 
 		// Creates as router and connect
 		// links to it. Information about 
@@ -31,12 +27,19 @@ public class Run {
 		Router routeNode = new 	Router(7, 1, Net);
 		Router routeNode2 = new Router(7,2, Net);
 		
+		Node  trafficGen = new Node(1,1,0,null);
+		Node  trafficSink = new Node(2,2,2,routeNode2);
+		
+
+		trafficGen.setPeer(link1);
+		trafficSink.setPeer(link2);
+		
 		
 		
 		routeNode.connectInterface(0, routerLink, routeNode2);
 		routeNode2.connectInterface(0, routerLink, routeNode);	
 		routeNode.connectInterface(1, link1, trafficGen);
-		routeNode2.connectInterface(2, link2, trafficSink);
+		routeNode.connectInterface(2, link2, trafficSink);
 		trafficGen.setHomeAgent(routeNode.routerId);
 		trafficSink.setHomeAgent(routeNode2.routerId);
 		

@@ -30,6 +30,12 @@ public class Router extends SimEnt{
 		if (interfaceNumber<_interfaces)
 		{
 			_routingTable[interfaceNumber] = new RouteTableEntry(link, node);
+			
+			
+			//REMOVE MEANT TO BE REPLACED WITH ROUTER SOLICITATION
+			if(node.getClass()==Node.class) {
+				((Node) node).setCurrentRouter(this);
+			}
 		}
 		else
 			System.out.println("Trying to connect to port not in router");
@@ -75,13 +81,14 @@ public class Router extends SimEnt{
 	{
 		SimEnt routerInterface=null;
 		for(int i=0; i<_interfaces; i++)
-			if (_routingTable[i] != null)
+			if (_routingTable[i] != null && (_routingTable[i].node().getClass() == Node.class)){
 				
-				
+				int poop = ((Node) _routingTable[i].node()).getAddr().networkId();
 				if (((Node) _routingTable[i].node()).getAddr().networkId() == networkAddress)
 				{
 					routerInterface = _routingTable[i].link();
 				}
+			}
 				
 		return routerInterface;
 	}
@@ -105,7 +112,7 @@ public class Router extends SimEnt{
 	public void clearInterfaceEntry(NetworkAddr targetNode) {
 		
 		for(int i=0; i<_interfaces; i++)
-			if (_routingTable[i] != null)
+			if (_routingTable[i] != null && _routingTable[i].node().getClass() == Node.class )
 			{
 				if (((Node) _routingTable[i].node()).getAddr() == targetNode)
 				{
@@ -136,25 +143,11 @@ public class Router extends SimEnt{
 	{
 		if (ev instanceof Message)
 		{
-			for (int i=0; i< CareOf.size(); i++) {
-				if(((Message) ev).destination() == CareOf.get(i).getId()){
-					if(CareOf.get(i).getHomeAgent() == CareOf.get(i).getCareOf()) {
-			
 			System.out.println("Router handles packet with seq: " + ((Message) ev).seq()+" from node: "+((Message) ev).source().networkId()+"." + ((Message) ev).source().nodeId() );
 			SimEnt sendNext = getInterface(((Message) ev).destination().networkId());
 			System.out.println("Router sends to node: " + ((Message) ev).destination().networkId()+"." + ((Message) ev).destination().nodeId());		
 			send (sendNext, ev, _now);
-					}
-					else {
-						
-						
-						//Send to Foreign Router
-						
-					}
-				
-			}
-	
-		}
+			
 		}
 		if (ev instanceof routerSolicitation) {
 			System.out.println("Router Solicitation Recieved");
@@ -163,12 +156,16 @@ public class Router extends SimEnt{
 		
 		if (ev instanceof moveRouter) {
 			
+			System.out.println("started moving node, publishing target Router connection list");
+			
 			//Initialization
 			Node oldNode= ((moveRouter) ev).getLeaving();
 			NetworkAddr oldNodeAddr= ((moveRouter) ev).getLeaving().getAddr();
 			Router targetRouter = ((moveRouter) ev).getEntering();
 			RouteTableEntry[] newTable= targetRouter.getRoutingTable();
 			
+			
+			targetRouter.publishRouting();
 			
 			//disconnect leaving node from current Link
 			clearInterfaceEntry(oldNodeAddr);
@@ -186,13 +183,11 @@ public class Router extends SimEnt{
 						break;
 					}
 				}
+				//bit of a roundabout way to solicit Router but i am not rewriting this code.
+				send(targetRouter, new routerSolicitation(oldNode), 0);
+				System.out.println("Node moved. Result");
 				targetRouter.publishRouting();
-			
-			
-			
-			
-			System.out.println("Router Solicitation Recieved");
-			send (((routerSolicitation) ev).get_node(),  ((Event) new routerAdvertisement(routerId)), (double)_now);
+					
 		}
 		
 		/*

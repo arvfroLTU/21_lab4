@@ -4,7 +4,7 @@ public class routerSolicitation implements Event{
 	private SimEnt _node;
 	
 routerSolicitation(SimEnt node){
-	set_node(node);
+	this._node = node;
 }
 	public void entering(SimEnt locale)
 	{
