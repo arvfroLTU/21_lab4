@@ -102,6 +102,19 @@ public class Router extends SimEnt{
 	}
 	
 	
+	public void clearInterfaceEntry(NetworkAddr targetNode) {
+		
+		for(int i=0; i<_interfaces; i++)
+			if (_routingTable[i] != null)
+			{
+				if (((Node) _routingTable[i].node()).getAddr() == targetNode)
+				{
+					 _routingTable[i] = null;
+					 System.out.println("interface " + i + " cleared");
+				}
+			}
+	}
+	
 	public void routerAdvertisement() {
 		for (int i =0; i <_routingTable.length; i++) {
 			if (_routingTable[i] !=null){
@@ -114,18 +127,18 @@ public class Router extends SimEnt{
 	
 	// When messages are received at the router this method is called
 	
-	public void recv(SimEnt source, Event event)
+	public void recv(SimEnt source, Event ev)
 	{
-		if (event instanceof Message)
+		if (ev instanceof Message)
 		{
 			for (int i=0; i< CareOf.size(); i++) {
-				if(((Message) event).destination() == CareOf.get(i).getId()){
+				if(((Message) ev).destination() == CareOf.get(i).getId()){
 					if(CareOf.get(i).getHomeAgent() == CareOf.get(i).getCareOf()) {
 			
-			System.out.println("Router handles packet with seq: " + ((Message) event).seq()+" from node: "+((Message) event).source().networkId()+"." + ((Message) event).source().nodeId() );
-			SimEnt sendNext = getInterface(((Message) event).destination().networkId());
-			System.out.println("Router sends to node: " + ((Message) event).destination().networkId()+"." + ((Message) event).destination().nodeId());		
-			send (sendNext, event, _now);
+			System.out.println("Router handles packet with seq: " + ((Message) ev).seq()+" from node: "+((Message) ev).source().networkId()+"." + ((Message) ev).source().nodeId() );
+			SimEnt sendNext = getInterface(((Message) ev).destination().networkId());
+			System.out.println("Router sends to node: " + ((Message) ev).destination().networkId()+"." + ((Message) ev).destination().nodeId());		
+			send (sendNext, ev, _now);
 					}
 					else {
 						
@@ -138,9 +151,21 @@ public class Router extends SimEnt{
 	
 		}
 		}
-		if (event instanceof routerSolicitation) {
+		if (ev instanceof routerSolicitation) {
 			System.out.println("Router Solicitation Recieved");
-			send (((routerSolicitation) event).get_node(),  ((Event) new routerAdvertisement(routerId)), (double)_now);
+			send (((routerSolicitation) ev).get_node(),  ((Event) new routerAdvertisement(routerId)), (double)_now);
+		}
+		
+		if (ev instanceof moveRouter) {
+			
+			//disconnect from current Link
+			((moveRouter) ev).	
+			
+			
+			
+			
+			System.out.println("Router Solicitation Recieved");
+			send (((routerSolicitation) ev).get_node(),  ((Event) new routerAdvertisement(routerId)), (double)_now);
 		}
 		
 		/*
