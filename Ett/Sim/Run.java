@@ -1,5 +1,7 @@
 package Sim;
 
+import java.util.ArrayList;
+
 // An example of how to build a topology and starting the simulation engine
 
 public class Run {
@@ -9,7 +11,7 @@ public class Run {
  		Link link1 = new Link();
 		Link link2 = new Link();
 		Link routerLink = new Link();
-		
+		ArrayList<HomeAgents> Net = new ArrayList<HomeAgents>();
 		
 		
 		// Create two end hosts that will be
@@ -26,8 +28,8 @@ public class Run {
 		// the host connected to the other
 		// side of the link is also provided
 		// Note. A switch is created in same way using the Switch class
-		Router routeNode = new 	Router(7, 1);
-		Router routeNode2 = new Router(7,2);
+		Router routeNode = new 	Router(7, 1, Net);
+		Router routeNode2 = new Router(7,2, Net);
 			
 		
 		routeNode.connectInterface(0, link1, trafficGen);

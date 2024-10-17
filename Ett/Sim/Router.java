@@ -25,7 +25,7 @@ public class Router extends SimEnt{
  	
 	// This method connects links to the router and also informs the 
 	// router of the host connects to the other end of the link
-	public void connectInterface(int interfaceNumber, SimEnt link, SimEnt node, largerNetwork Network)
+	public void connectInterface(int interfaceNumber, SimEnt link, SimEnt node)
 	{
 		if (interfaceNumber<_interfaces)
 		{
