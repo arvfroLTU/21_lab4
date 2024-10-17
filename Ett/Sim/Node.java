@@ -1,5 +1,7 @@
 package Sim;
 
+import java.util.ArrayList;
+
 // This class implements a node (host) it has an address, a peer that it communicates with
 // and it count messages send and received.
 
@@ -16,7 +18,7 @@ public class Node extends SimEnt {
 	public int flag = 0;
 	public int _homeAgentId;
 	private int _currentAgentId;
-
+	
 	
 	public Node (int network, int node)
 	{
@@ -26,6 +28,9 @@ public class Node extends SimEnt {
 	
 	
 	// Sets the peer to communicate with. This node is single homed
+	
+		
+
 	
 	public void setPeer (SimEnt peer)
 	{
@@ -39,12 +44,6 @@ public class Node extends SimEnt {
 	
 	}
 	
-	public void setHomeAgent (int homeAgent)
-	{
-
-		this._homeAgentId = homeAgent;
-	
-	}
 	
 	
 	public NetworkAddr getAddr()
@@ -52,6 +51,9 @@ public class Node extends SimEnt {
 		return _id;
 	}
 
+	public void setNetworkAddr(int i) {
+		this._id.setNetworkId(i);
+	}
 	
 	
 	public void StartSending(int network, int node, int number, int timeInterval, int startSeq)

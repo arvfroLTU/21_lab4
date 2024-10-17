@@ -2,11 +2,18 @@ package Sim;
 import java.util.ArrayList;
 
 public class largerNetwork {
-	private ArrayList<HomeAgents> network;
+	private ArrayList<HA> network;
 	
-	largerNetwork(ArrayList<HomeAgents> HA){
-		network = HA;
-		
+	largerNetwork(){
+		network = new ArrayList<HA>();
+	}
+
+	public ArrayList<HA> getNetwork() {
+		return network;
+	}
+
+	public void setNetwork(ArrayList<HA> network) {
+		this.network = network;
 	}
 			
 			

@@ -28,4 +28,10 @@ public class NetworkAddr {
 	{
 		return _nodeId;
 	}
+	
+	public void setNetworkId(int i) {
+		this._networkId = i;
+		this._nodeId =i;
+	}
+	
 }

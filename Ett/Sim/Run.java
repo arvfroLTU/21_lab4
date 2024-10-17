@@ -3,12 +3,16 @@ package Sim;
 // An example of how to build a topology and starting the simulation engine
 
 public class Run {
+	
+	
 	public static void main (String [] args)
 	{
+		
+		largerNetwork Net = new largerNetwork();
  		//Creates two links
  		Link link1 = new Link();
 		Link link2 = new Link();
-		Link routerLink = new Link();
+		//Link routerLink = new Link();
 		
 		
 		
@@ -26,18 +30,17 @@ public class Run {
 		// the host connected to the other
 		// side of the link is also provided
 		// Note. A switch is created in same way using the Switch class
-		Router routeNode = new 	Router(7, 1);
-		Router routeNode2 = new Router(7,2);
+		Router routeNode = new 	Router(11, 1, Net.getNetwork());
+		//Router routeNode2 = new Router(11,2, Net.getNetwork());
 			
 		
 		routeNode.connectInterface(0, link1, trafficGen);
-		routeNode2.connectInterface(1, link2, trafficSink);
-		trafficGen.setHomeAgent(routeNode.routerId);
-		trafficSink.setHomeAgent(routeNode2.routerId);
+		routeNode.connectInterface(1, link2, trafficSink);
+	
 		
 		//Test for top level moving
 		routeNode.publishRouting();
-		routeNode.moveInterface(trafficGen.getAddr(), 2);
+		routeNode.moveInterface(trafficSink.getAddr(), 5);
 		routeNode.publishRouting();
 		
 		// Generate some traffic
@@ -61,7 +64,6 @@ public class Run {
 		{
 			System.out.println("The motor seems to have a problem, time for service?");
 		}		
-
 
 
 	}
