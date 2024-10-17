@@ -115,6 +115,11 @@ public class Router extends SimEnt{
 			}
 	}
 	
+	public RouteTableEntry[] getRoutingTable() {
+		return _routingTable;
+	}
+	
+	
 	public void routerAdvertisement() {
 		for (int i =0; i <_routingTable.length; i++) {
 			if (_routingTable[i] !=null){
@@ -158,8 +163,30 @@ public class Router extends SimEnt{
 		
 		if (ev instanceof moveRouter) {
 			
-			//disconnect from current Link
-			((moveRouter) ev).	
+			//Initialization
+			Node oldNode= ((moveRouter) ev).getLeaving();
+			NetworkAddr oldNodeAddr= ((moveRouter) ev).getLeaving().getAddr();
+			Router targetRouter = ((moveRouter) ev).getEntering();
+			RouteTableEntry[] newTable= targetRouter.getRoutingTable();
+			
+			
+			//disconnect leaving node from current Link
+			clearInterfaceEntry(oldNodeAddr);
+			
+			
+			//establish new Link and connection with node
+				Link targetLink = new Link();
+				targetLink.setConnector(oldNode);
+				oldNode.setPeer(targetLink); 
+			
+			//Connect Foreign Router to Node
+				for (int i =0; i< newTable.length +1; i++ ) {
+					if(newTable[i] == null) {
+						targetRouter.connectInterface(i, targetLink, oldNode);
+						break;
+					}
+				}
+				targetRouter.publishRouting();
 			
 			
 			

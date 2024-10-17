@@ -1,12 +1,12 @@
 package Sim;
 
 public class moveRouter implements Event {
-	private NetworkAddr sourceNode;
-	private NetworkAddr targetRouter;
+	private Node sourceNode;
+	private Router targetRouter;
 	
 	
-	moveRouter(NetworkAddr from, NetworkAddr to){
-		this.setLeaving(sourceNode);
+	moveRouter(Node from, Router to){
+		this.setLeaving(from);
 		this.setEntering(to);
 	}
 
@@ -18,22 +18,22 @@ public class moveRouter implements Event {
 	}
 
 
-	public NetworkAddr getLeaving() {
+	public Node getLeaving() {
 		return sourceNode;
 	}
 
 
-	public void setLeaving(NetworkAddr leaving) {
+	public void setLeaving(Node leaving) {
 		this.sourceNode = leaving;
 	}
 
 
-	public NetworkAddr getEntering() {
+	public Router getEntering() {
 		return targetRouter;
 	}
 
 
-	public void setEntering(NetworkAddr entering) {
+	public void setEntering(Router entering) {
 		this.targetRouter = entering;
 	}
 
