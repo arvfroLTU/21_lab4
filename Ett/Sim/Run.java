@@ -29,6 +29,7 @@ public class Run {
 		
 		Node  trafficGen = new Node(1,1,0,null);
 		Node  trafficSink = new Node(2,2,2,routeNode2);
+		routeNode.setHomeAgent(trafficSink, 1337, routeNode2);
 		
 
 		trafficGen.setPeer(link1);
@@ -50,7 +51,7 @@ public class Run {
 		
 		// Generate some traffic
 		// host1 will send 4 messages with time interval 5 to network 2, node 1. Sequence starts with number 1
-		trafficGen.StartSending(2, 2, 5, 15, 0); 
+		trafficGen.StartSending(2, 2, 10, 15, 0); 
 	
 		
 		// host2 will send 4 messages with time inter50val 5 to network 1, node 1. Sequence starts with number 10

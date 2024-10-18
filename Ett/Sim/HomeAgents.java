@@ -1,16 +1,19 @@
 package Sim;
 
+import java.util.ArrayList;
+
 public class HomeAgents extends SimEnt{
 	private NetworkAddr Id;
 	private Node targetNode;
 	private Router homeAgent;
 	private Router careOf;
 
-	HomeAgents(NetworkAddr address, Node node, Router H, Router C){
+	HomeAgents(NetworkAddr address, Node node, Router H, Router C, ArrayList<HomeAgents> HAList){
 		this.setId(address);
-		this.targetNode= node;
+		this.setTargetNode(node);
 		this.setHomeAgent(H);
 		this.setCareOf(C);
+		HAList.add(this);
 		
 	}
 
@@ -44,10 +47,19 @@ public class HomeAgents extends SimEnt{
 		if (event instanceof Message) {
 			
 			NetworkAddr destination = ((Message) event).destination();
+			int seq=((Message)event).seq();
 			System.out.println("HA tag");
-			send(careOf, new Message(this.getId(), new NetworkAddr(destination.networkId(),destination.nodeId()),0), 0);
+			send(careOf, new Message(this.getId(), new NetworkAddr(destination.networkId(),destination.nodeId()),seq), 0);
 		}
 		
+	}
+
+	public Node getTargetNode() {
+		return targetNode;
+	}
+
+	public void setTargetNode(Node targetNode) {
+		this.targetNode = targetNode;
 	}
 	
 }

@@ -10,7 +10,7 @@ public class Router extends SimEnt{
 	private int _interfaces;
 	private int _now=0;
 	public int routerId;
-	private ArrayList<HomeAgents> CareOf;
+	private ArrayList<HomeAgents> careOf;
 
 	// When created, number of interfaces are defined
 	
@@ -19,7 +19,7 @@ public class Router extends SimEnt{
 		_routingTable = new RouteTableEntry[interfaces];
 		_interfaces=interfaces;
 		routerId = id;
-		CareOf =network;
+		careOf =network;
 	}
 	
  	
@@ -66,6 +66,9 @@ public class Router extends SimEnt{
 		}
 	}
 	
+	public void setHomeAgent(Node node, int NA, Router targetRouter) {
+		HomeAgents Entry = new HomeAgents(new NetworkAddr(NA,NA), node,this, targetRouter, careOf);
+	}
 	
 	public void publishRouting() {
 		System.out.println("--------------------------");
@@ -83,12 +86,22 @@ public class Router extends SimEnt{
 		for(int i=0; i<_interfaces; i++)
 			if (_routingTable[i] != null && (_routingTable[i].node().getClass() == Node.class)){
 				
-				int poop = ((Node) _routingTable[i].node()).getAddr().networkId();
 				if (((Node) _routingTable[i].node()).getAddr().networkId() == networkAddress)
 				{
 					routerInterface = _routingTable[i].link();
 				}
+				
 			}
+		if (routerInterface ==null) {
+			for(int j= 0; j< careOf.size();j++) {
+				if (careOf.get(j).getTargetNode().getAddr().networkId() ==networkAddress) {
+					routerInterface = careOf.get(j);
+					
+				}
+				
+			}
+			
+		}
 				
 		return routerInterface;
 	}
