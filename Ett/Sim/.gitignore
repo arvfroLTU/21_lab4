@@ -29,3 +29,5 @@
 /routerAdvertisement.class
 /routerSolicitation.class
 /moveRouter.class
+/bindingUpdate.class
+/bindingAck.class

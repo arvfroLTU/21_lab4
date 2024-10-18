@@ -202,7 +202,16 @@ public class Router extends SimEnt{
 				targetRouter.publishRouting();
 				System.out.println("and the table for the Router left behind");
 				this.publishRouting();
+				
+				for(int i=0; i<careOf.size(); i++) {
+					if (oldNode == careOf.get(i).getTargetNode()) {
+						
+					send(careOf.get(i), new bindingUpdate(targetRouter), 0);
+					System.out.println("BindingUpdate sent");
 					
+					}
+				}
+			
 		}
 		
 		/*

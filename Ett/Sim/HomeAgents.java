@@ -40,6 +40,14 @@ public class HomeAgents extends SimEnt{
 	public void setCareOf( Router CareOf) {
 		this.careOf = CareOf;
 	}
+	
+	public Node getTargetNode() {
+		return targetNode;
+	}
+
+	public void setTargetNode(Node targetNode) {
+		this.targetNode = targetNode;
+	}
 
 	@Override
 	public void recv(SimEnt source, Event event) {
@@ -52,14 +60,12 @@ public class HomeAgents extends SimEnt{
 			send(careOf, new Message(this.getId(), new NetworkAddr(destination.networkId(),destination.nodeId()),seq), 0);
 		}
 		
+		if (event instanceof bindingUpdate) {
+			this.setCareOf(((bindingUpdate)event).getNewCareOf());
+			send(careOf, new bindingAck(true),0); 
+			System.out.println("Sent binding Acknowledgement");
+		}
 	}
 
-	public Node getTargetNode() {
-		return targetNode;
-	}
-
-	public void setTargetNode(Node targetNode) {
-		this.targetNode = targetNode;
-	}
 	
 }
