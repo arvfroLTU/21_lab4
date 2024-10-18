@@ -187,6 +187,8 @@ public class Router extends SimEnt{
 				send(targetRouter, new routerSolicitation(oldNode), 0);
 				System.out.println("Node moved. Result");
 				targetRouter.publishRouting();
+				System.out.println("and the table for the Router left behind");
+				this.publishRouting();
 					
 		}
 		

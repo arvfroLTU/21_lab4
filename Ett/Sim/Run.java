@@ -38,7 +38,7 @@ public class Run {
 		
 		routeNode.connectInterface(0, routerLink, routeNode2);
 		routeNode2.connectInterface(0, routerLink, routeNode);	
-		routeNode.connectInterface(1, link1, trafficGen);
+		routeNode.connectInterface(6, link1, trafficGen);
 		routeNode.connectInterface(2, link2, trafficSink);
 		trafficGen.setHomeAgent(routeNode.routerId);
 		trafficSink.setHomeAgent(routeNode2.routerId);
