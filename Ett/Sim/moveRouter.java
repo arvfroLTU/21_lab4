@@ -3,11 +3,13 @@ package Sim;
 public class moveRouter implements Event {
 	private Node sourceNode;
 	private Router targetRouter;
+	private int reconnectionDelay;
 	
 	
-	moveRouter(Node from, Router to){
+	moveRouter(Node from, Router to, int delay){
 		this.setLeaving(from);
 		this.setEntering(to);
+		this.reconnectionDelay = delay;
 	}
 
 
@@ -35,6 +37,16 @@ public class moveRouter implements Event {
 
 	public void setEntering(Router entering) {
 		this.targetRouter = entering;
+	}
+
+
+	public int getReconnectionDelay() {
+		return reconnectionDelay;
+	}
+
+
+	public void setReconnectionDelay(int reconnectionDelay) {
+		this.reconnectionDelay = reconnectionDelay;
 	}
 
 }

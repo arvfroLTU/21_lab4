@@ -11,6 +11,7 @@ public class Router extends SimEnt{
 	private int _now=0;
 	public int routerId;
 	private ArrayList<HomeAgents> careOf;
+	
 
 	// When created, number of interfaces are defined
 	
@@ -184,11 +185,22 @@ public class Router extends SimEnt{
 			clearInterfaceEntry(oldNodeAddr);
 			
 			
+			//Delay reconnection to enable losing packets
+			int a = ((moveRouter) ev).getReconnectionDelay();
+			try {
+			this.wait(a);
+			}catch(InterruptedException e) {
+				System.out.println("get owned");
+			}
+			
 			//establish new Link and connection with node
 				Link targetLink = new Link();
 				targetLink.setConnector(oldNode);
-				oldNode.setPeer(targetLink); 
-			
+				oldNode.setPeer(targetLink); 	
+				
+				
+				
+				
 			//Connect Foreign Router to Node
 				for (int i =0; i< newTable.length +1; i++ ) {
 					if(newTable[i] == null) {

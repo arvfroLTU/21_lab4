@@ -27,8 +27,8 @@ public class Run {
 		Router routeNode = new 	Router(7, 1, Net);
 		Router routeNode2 = new Router(7,2, Net);
 		
-		Node  trafficGen = new Node(1,1,0,null);
-		Node  trafficSink = new Node(2,2,2,routeNode2);
+		Node  trafficGen = new Node(1,1,0,null, 100);
+		Node  trafficSink = new Node(2,2,2,routeNode2, 100);
 		routeNode.setHomeAgent(trafficSink, 1337, routeNode2);
 		
 

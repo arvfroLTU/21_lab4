@@ -20,14 +20,16 @@ public class Node extends SimEnt {
 	int counter= 0;
 	public int _homeAgentId;
 	private int _currentAgentId;
+	private int reconnectionDelay;
 
 	
-	public Node (int network, int node, int moveAfter, Router MoveTo)
+	public Node (int network, int node, int moveAfter, Router MoveTo, int rcDelay)
 	{
 		super();
 		_id = new NetworkAddr(network, node);
 		this.moveCondition = moveAfter;
 		this.moveHere = MoveTo;
+		this.reconnectionDelay = rcDelay;
 	}	
 	
 	
@@ -58,8 +60,8 @@ public class Node extends SimEnt {
 		return _id;
 	}
 	
-	public void moveRouter(Router target) {
-		send(currentRouter, new moveRouter(this, target), 0 );
+	public void moveRouter(Router target, int delay) {
+		send(currentRouter, new moveRouter(this, target, delay), 0 );
 	}
 
 	
@@ -105,7 +107,7 @@ public class Node extends SimEnt {
 			counter++;
 			System.out.println("Node "+_id.networkId()+ "." + _id.nodeId() +" receives message with seq: "+((Message) ev).seq() + " at time "+SimEngine.getTime());
 			if (counter > moveCondition && flag < 1 && moveHere != null) {
-				this.moveRouter(moveHere);
+				this.moveRouter(moveHere, reconnectionDelay);
 				flag++;
 
 			}
@@ -126,6 +128,18 @@ public class Node extends SimEnt {
 	public void setCurrentRouter(Router currentRouter) {
 		this.currentRouter = currentRouter;
 	}
+
+
+	public int getReconnectionDelay() {
+		return reconnectionDelay;
+	}
+
+
+	public void setReconnectionDelay(int reconnectionDelay) {
+		this.reconnectionDelay = reconnectionDelay;
+	}
+
+
 
 }
 	
