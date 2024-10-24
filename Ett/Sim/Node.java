@@ -47,7 +47,7 @@ public class Node extends SimEnt {
 	
 	}
 	
-	public void setHomeAgent (int homeAgent)
+	public void setHomeAgentNode (int homeAgent)
 	{
 
 		this._homeAgentId = homeAgent;

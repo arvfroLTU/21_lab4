@@ -12,6 +12,16 @@ public class Router extends SimEnt{
 	public int routerId;
 	private ArrayList<HomeAgents> careOf;
 	
+	
+	//public void setHomeAgentRouter(Node node, int NA, Router
+	//targetRouter, int buffer) {
+	// HA mounting variables
+	
+	private Node mountHATargetNode;
+	private int mountHANetworkAddr;
+	private Router mountHATargetRouter;
+	private int mountHABuffer;
+	
 
 	// When created, number of interfaces are defined
 	
@@ -67,8 +77,12 @@ public class Router extends SimEnt{
 		}
 	}
 	
-	public void setHomeAgent(Node node, int NA, Router targetRouter) {
-		HomeAgents Entry = new HomeAgents(new NetworkAddr(NA,NA), node,this, targetRouter, careOf);
+	public void setHomeAgentRouter(Node node, int NA, Router targetRouter, int buffer) {
+		//HomeAgents Entry = new HomeAgents(new NetworkAddr(NA,NA), node,this, targetRouter, careOf, buffer);
+		this.mountHABuffer=buffer;
+		this.mountHANetworkAddr= NA;
+		this.mountHATargetNode=node;
+		this.mountHATargetRouter= targetRouter;
 	}
 	
 	public void publishRouting() {
@@ -154,14 +168,42 @@ public class Router extends SimEnt{
 	// When messages are received at the router this method is called
 	
 	public void recv(SimEnt source, Event ev)
-	{
+	
+	{	
 		if (ev instanceof Message)
 		{
-			System.out.println("Router handles packet with seq: " + ((Message) ev).seq()+" from node: "+((Message) ev).source().networkId()+"." + ((Message) ev).source().nodeId() );
+			
+			SimEnt maybeHANode;
+			
 			SimEnt sendNext = getInterface(((Message) ev).destination().networkId());
+			if( sendNext instanceof Link) {
+			 maybeHANode = ((Link) sendNext).getConnectorA();
+			}
+			else {
+			maybeHANode = null;
+			}
+			//identifies if node has moved routers, and if  a buffer is still needed, depletes
+			//amount of packets left to buffer. simulates disconnection.
+			
+			
+			for(int j=0; j <careOf.size(); j++) {
+				if (maybeHANode == careOf.get(j).getTargetNode()) {
+					HomeAgents concernedHA =  careOf.get(j);
+					
+					if (concernedHA.getBffr() >0) {
+						concernedHA.setBffr(concernedHA.getBffr()-1);
+						if (concernedHA.getBffr() == 0);
+						send(sendNext, new Release(true), 0);
+					}	
+				}
+			
+				
+			}
+			
+			System.out.println("Router handles packet with seq: " + ((Message) ev).seq()+" from node: "+((Message) ev).source().networkId()+"." + ((Message) ev).source().nodeId() );
+			// SimEnt sendNext = getInterface(((Message) ev).destination().networkId());
 			System.out.println("Router sends to node: " + ((Message) ev).destination().networkId()+"." + ((Message) ev).destination().nodeId());		
 			send (sendNext, ev, _now);
-			
 		}
 		if (ev instanceof routerSolicitation) {
 			System.out.println("Router Solicitation Recieved");
@@ -185,13 +227,6 @@ public class Router extends SimEnt{
 			clearInterfaceEntry(oldNodeAddr);
 			
 			
-			//Delay reconnection to enable losing packets
-			int a = ((moveRouter) ev).getReconnectionDelay();
-			try {
-			this.wait(a);
-			}catch(InterruptedException e) {
-				System.out.println("get owned");
-			}
 			
 			//establish new Link and connection with node
 				Link targetLink = new Link();
@@ -207,7 +242,29 @@ public class Router extends SimEnt{
 						targetRouter.connectInterface(i, targetLink, oldNode);
 						break;
 					}
+					
+			// create new homeAgent to assigned node
+					
+			HomeAgents Entry = new HomeAgents(new NetworkAddr(this.mountHANetworkAddr,this.mountHANetworkAddr),
+					this.mountHATargetNode, this, this.mountHATargetRouter, careOf, this.mountHABuffer);
+			
+					
+			// if homeAgent has a buffer (hard coded here but buffer implies lost packets)	
+				try {
+				for(int j=0; i<careOf.size(); j++) {
+					if (oldNode == careOf.get(j).getTargetNode()) {
+							
+						HomeAgents concernedHA= careOf.get(j);
+						int  sendNotFor = concernedHA.getBffr();
+						concernedHA.setSendOk(false);
+							
+						}
+					}
+				}catch(Exception e) {
+					
 				}
+				}
+				
 				//bit of a roundabout way to solicit Router but i am not rewriting this code.
 				send(targetRouter, new routerSolicitation(oldNode), 0);
 				System.out.println("Node moved. Result");

@@ -29,7 +29,7 @@ public class Run {
 		
 		Node  trafficGen = new Node(1,1,0,null, 100);
 		Node  trafficSink = new Node(2,2,2,routeNode2, 100);
-		routeNode.setHomeAgent(trafficSink, 1337, routeNode2);
+		routeNode.setHomeAgentRouter(trafficSink, 1337, routeNode2, 3);
 		
 
 		trafficGen.setPeer(link1);
@@ -41,8 +41,8 @@ public class Run {
 		routeNode2.connectInterface(0, routerLink, routeNode);	
 		routeNode.connectInterface(6, link1, trafficGen);
 		routeNode.connectInterface(2, link2, trafficSink);
-		trafficGen.setHomeAgent(routeNode.routerId);
-		trafficSink.setHomeAgent(routeNode2.routerId);
+		trafficGen.setHomeAgentNode(routeNode.routerId);
+		trafficSink.setHomeAgentNode(routeNode2.routerId);
 		
 		//Test for top level moving
 		routeNode.publishRouting();

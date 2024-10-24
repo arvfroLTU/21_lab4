@@ -7,16 +7,21 @@ public class HomeAgents extends SimEnt{
 	private Node targetNode;
 	private Router homeAgent;
 	private Router careOf;
+	private int targetNodeNetworkId;
 	private boolean sendOk = true;
-	private ArrayList<SimEnt> simEntBuffer;
-	private ArrayList<Event> eventBuffer;
+	private double waitFor =0;
+	private int bffr;
+	private ArrayList<SimEnt> simEntBuffer = new ArrayList<>();
+	private ArrayList<Event> eventBuffer =new ArrayList<>();
 
-	HomeAgents(NetworkAddr address, Node node, Router H, Router C, ArrayList<HomeAgents> HAList){
+	HomeAgents(NetworkAddr address, Node node, Router H, Router C, ArrayList<HomeAgents> HAList, int buffer){
 		this.setId(address);
 		this.setTargetNode(node);
 		this.setHomeAgent(H);
 		this.setCareOf(C);
+		this.setBffr(buffer);
 		HAList.add(this);
+		this.setTargetNodeNetworkId(targetNode.getAddr().nodeId());
 		
 	}
 
@@ -56,7 +61,7 @@ public class HomeAgents extends SimEnt{
 	public void recv(SimEnt source, Event event) {
 		
 		if(event instanceof Release) {
-			for(int i= 0; i< simEntBuffer.size(); i =0) {
+			for(int i= 0; i< eventBuffer.size(); i =0) {
 			SimEnt src= simEntBuffer.get(i);
 			Event ev = eventBuffer.get(i);
 			
@@ -74,9 +79,10 @@ public class HomeAgents extends SimEnt{
 			this.sendOk =  true;
 		}
 		// TODO Auto-generated method stub
-		if (sendOk  ==false) {
+		if (this.sendOk  ==false) {
 			simEntBuffer.add(source);
 			eventBuffer.add(event);
+			System.out.println("MN not yet connected, message added to buffer");
 			
 			
 		}else {
@@ -102,6 +108,31 @@ public class HomeAgents extends SimEnt{
 
 	public void setSendOk(boolean sendOk) {
 		this.sendOk = sendOk;
+	}
+
+	public double getWaitFor() {
+		return waitFor;
+	}
+
+	public void setWaitFor(double waitFor) {
+		this.waitFor = waitFor;
+	}
+
+	public int getBffr() {
+		return bffr;
+	}
+
+	public void setBffr(int bffr) {
+		this.bffr = bffr;
+	}
+
+
+	public int getTargetNodeNetworkId() {
+		return targetNodeNetworkId;
+	}
+
+	public void setTargetNodeNetworkId(int targetNodeNetworkId) {
+		this.targetNodeNetworkId = targetNodeNetworkId;
 	}
 
 	

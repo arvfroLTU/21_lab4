@@ -41,6 +41,10 @@ public final class SimEngine implements Runnable {
 	// To force a stop of the motor, even when events are still
 	// present in the event list. This method can be used
 	
+	
+	public void incrementTime() {
+		this._simTime = this._simTime +1;
+	}
 	public void stop()
 	{
 		_quit = true;
