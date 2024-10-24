@@ -167,27 +167,29 @@ public class Router extends SimEnt{
 	
 	// When messages are received at the router this method is called
 	
-	public void recv(SimEnt source, Event ev)
+	public void recv(SimEnt source, Event ev) {
+	
+	SimEnt maybeHANode;
+	int maybeHANodeId = 8008135;
 	
 	{	
 		if (ev instanceof Message)
 		{
 			
-			SimEnt maybeHANode;
-			
+		
 			SimEnt sendNext = getInterface(((Message) ev).destination().networkId());
-			if( sendNext instanceof Link) {
-			 maybeHANode = ((Link) sendNext).getConnectorA();
+			if( sendNext instanceof HomeAgents) {
+			 maybeHANode = ((HomeAgents) sendNext).getTargetNode();
+				 maybeHANodeId = ((Node) maybeHANode).getAddr().nodeId();
 			}
-			else {
-			maybeHANode = null;
-			}
+	
 			//identifies if node has moved routers, and if  a buffer is still needed, depletes
 			//amount of packets left to buffer. simulates disconnection.
 			
 			
 			for(int j=0; j <careOf.size(); j++) {
-				if (maybeHANode == careOf.get(j).getTargetNode()) {
+				int q= careOf.get(j).getTargetNode().getAddr().nodeId();
+				if (maybeHANodeId == careOf.get(j).getTargetNode().getAddr().nodeId()) {
 					HomeAgents concernedHA =  careOf.get(j);
 					
 					if (concernedHA.getBffr() >0) {
@@ -293,4 +295,5 @@ public class Router extends SimEnt{
 			
 		}*/
 	}
+}
 }

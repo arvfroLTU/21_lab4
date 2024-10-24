@@ -61,6 +61,7 @@ public class HomeAgents extends SimEnt{
 	public void recv(SimEnt source, Event event) {
 		
 		if(event instanceof Release) {
+			System.out.println("BAYBEEEEEEEEEEEEEEEEEEEEEe");
 			for(int i= 0; i< eventBuffer.size(); i =0) {
 			SimEnt src= simEntBuffer.get(i);
 			Event ev = eventBuffer.get(i);
