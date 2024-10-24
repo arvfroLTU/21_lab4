@@ -193,9 +193,10 @@ public class Router extends SimEnt{
 					HomeAgents concernedHA =  careOf.get(j);
 					
 					if (concernedHA.getBffr() >0) {
-						concernedHA.setBffr(concernedHA.getBffr()-1);
-						if (concernedHA.getBffr() == 0);
+						concernedHA.setBffr(concernedHA.getBffr()-1); 
+						if (concernedHA.getBffr() == 0) {
 						send(sendNext, new Release(true), 0);
+						}
 					}	
 				}
 			
